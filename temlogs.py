@@ -19,13 +19,17 @@ class LogError(Exception):
 ##Main object for logger
 class Logger(object):
     ##Initializing...
-    def __init__(self, filename: str="log.txt", enter_method: str='r'):
+    def __init__(self, filename: str="log.txt", enter_method: str='r', log_types : list[str]=["Critical Error", "Error (Bug)", "Critical Warning", "Warning", "Message"]):
         self.filename = filename
         if not path.exists(filename):
             a = open(filename, "w")
             a.close()
-        self.default_log_types = ["Critical Error", "Error", "Critical Warning", "Warning", "Message"]
+        self.default_log_types = log_types
         self.enter_method = enter_method
+
+    ##Logger()
+    def __call__(self):
+        return f"Logger object ({self.filename}, {self.default_log_types})"
 
     ##Logger() == other
     def __eq__(self, other):
@@ -82,12 +86,12 @@ class Logger(object):
 
     ##round(Logger())
     def __round__(self, n=None):
-        raise LogError("Can't use abs() - logger isn't a number.")
+        raise LogError("Can't use round() - logger isn't a number.")
 
     ##bool(Logger())
     def __bool__(self):
         file = open(self.filename, 'r')
-        if file:
+        if file.read():
             file.close()
             return True
         else:
