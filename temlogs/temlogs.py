@@ -1,9 +1,11 @@
 from os import path, remove
 
 filepath = str
-##Module Exception
+
+
+## Module Exception
 class LogError(Exception):
-    ##when it's initializing
+    ## when it's initializing
     def __init__(self, *args):
         if args:
             self.message = args[0]
@@ -18,9 +20,9 @@ class LogError(Exception):
             return 'Unexpected Error'
 
 
-##Main object for logger
+## Main object for logger
 class Logger(object):
-    ##Initializing...
+    ## Initializing...
     def __init__(self, filename: filepath = "log.txt", enter_method: str = 'r', log_types=None):
         if log_types is None:
             log_types = ["Message", "Warning",
@@ -33,82 +35,60 @@ class Logger(object):
         self.log_types = log_types
         self.enter_method = enter_method
 
-    ##Logger() == other
+    ## Logger() == other
     def __eq__(self, other):
-        file = open(self.filename, "r")
-        r = list(file) == other
-        file.close()
-        return r
+        return self.filename == other
 
-    ##Logger() != other
+    ## Logger() != other
     def __ne__(self, other):
-        file = open(self.filename, "r")
-        r = list(file) != other
-        file.close()
-        return r
+        return self.filename != other
 
-    ##Logger() >= other
+    ## Logger() >= other
     def __ge__(self, other):
-        file = open(self.filename, "r")
-        r = list(file) >= other
-        file.close()
-        return r
+        return len(self) >= other
 
-    ##Logger() <= other
+    ## Logger() <= other
     def __le__(self, other):
-        file = open(self.filename, "r")
-        r = list(file) <= other
-        file.close()
-        return r
+        return len(self) <= other
 
-    ##Logger() > other
+    ## Logger() > other
     def __gt__(self, other):
-        file = open(self.filename, "r")
-        r = list(file) > other
-        file.close()
-        return r
+        return len(self) > other
 
-    ##Logger() < other
+    ## Logger() < other
     def __lt__(self, other):
-        file = open(self.filename, "r")
-        r = list(file) < other
-        file.close()
-        return r
+        return len(self) < other
 
-    ##str(Logger())
+    ## str(Logger())
     def __str__(self):
-        file = open(self.filename, "r")
-        r = ' '.join(list(file))
-        file.close()
-        return r
+        return f'Logger object: {self.filename}'
+
+    ## repr(Logger())
+    def __repr__(self):
+        return str(self)
 
     ## abs(Logger())
     def __abs__(self):
         raise LogError("Can't use abs() - logger isn't a number.")
 
-    ##round(Logger())
+    ## round(Logger())
     def __round__(self, n=None):
         raise LogError("Can't use round() - logger isn't a number.")
 
-    ##bool(Logger())
+    ## bool(Logger())
     def __bool__(self):
-        file = open(self.filename, 'r')
-        if file:
-            file.close()
-            return True
-        else:
-            file.close()
-            return False
+        return path.exists(self.filename)
 
-    ##Length of file
+    ## Length of file
     def __len__(self):
         file = open(self.filename, 'r')
-        r = len(list(file))
+        r = len(file.readlines())
         file.close()
         return r
 
-    ##Log function
-    def log(self, message: str = "*log message wasn't given*", log_type: int = None, split_char: str = ": "):
+    ## Log function
+    def log(self, message: str = "*log message wasn't given*", log_type: int = None, split_char: str = ": ",
+            duplicate_to_console: bool = False):
         if log_type is None:
             log_type = 0
         if log_type >= len(self.log_types):
@@ -117,15 +97,17 @@ class Logger(object):
             file = open(self.filename, 'a')
             file.write(f'[{self.log_types[log_type]}]{split_char}{message}\n')
             file.close()
+            if duplicate_to_console:
+                self.console_log(message=message, log_type=log_type, split_char=split_char)
 
-    ##reversed(Logger())
+    ## reversed(Logger())
     def __reversed__(self):
         file = open(self.filename, 'r')
         rev = reversed(list(file))
         file.close()
         return rev
 
-    ##IDK what is it, modified version of print(), or something, i'm gonna delete this in the future
+    ## IDK what is it, modified version of print(), or something, i'm going to delete this in the future
     def console_log(self, message: str = "*log message wasn't given*", log_type: int = None,
                     split_char: str = ": "):
         if log_type is None:
@@ -133,9 +115,9 @@ class Logger(object):
         if log_type >= len(self.log_types):
             raise LogError("Type of the log doesn't exists.")
         else:
-            print(self.log_types[log_type] + split_char + message)
+            print(f'[{self.log_types[log_type]}]{split_char}{message}')
 
-    ##clearing the logs when needed
+    ## clearing the logs when needed
     def clear_file(self):
         file = open(self.filename, 'w')
         file.write('')
@@ -148,7 +130,7 @@ class Logger(object):
     ## getting the last log
     def last_log(self):
         file = open(self.filename, 'r')
-        res = list(file)[-1]
+        res = file.readlines()[-1]
         file.close()
         return res
 
@@ -158,7 +140,7 @@ class Logger(object):
         return self.file
 
     ## exiting context manager
-    def __exit__(self):
+    def __exit__(self, exception_type, exception_value, exception_traceback):
         self.file.close()
         del self.file
 
