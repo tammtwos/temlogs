@@ -21,7 +21,21 @@ class LogError(Exception):
 
 
 ## Main object for logger
-class Logger(object):
+class Logger:
+    """
+    The main object type - Logger. Its constructor takes three arguments:
+    1. Path to the file. Path can be either absolute or relative. File - is the place to store your messages,
+    warnings and errors. 'log.txt' by default.
+
+    2. Enter type. Shows the way opening the file using with Logger() as.... 'r' by default, should be 'a' if you need
+     to write something in the file using with construction.
+
+    3. Log types. List of types of messages. By default, consists of message, warning, critical warning, error and
+     critical error.
+
+    4. Duplicate to console bool.* Only for log(). If True, duplicates the log to console. False by default.
+    """
+
     ## Initializing...
     def __init__(self, filename: filepath = "log.txt", enter_method: str = 'r', log_types=None):
         if log_types is None:
@@ -34,6 +48,10 @@ class Logger(object):
             a.close()
         self.log_types = log_types
         self.enter_method = enter_method
+
+    ## bool(Logger())
+    def __bool__(self):
+        return path.exists(self.filename)
 
     ## Logger() == other
     def __eq__(self, other):
@@ -66,18 +84,6 @@ class Logger(object):
     ## repr(Logger())
     def __repr__(self):
         return str(self)
-
-    ## abs(Logger())
-    def __abs__(self):
-        raise LogError("Can't use abs() - logger isn't a number.")
-
-    ## round(Logger())
-    def __round__(self, n=None):
-        raise LogError("Can't use round() - logger isn't a number.")
-
-    ## bool(Logger())
-    def __bool__(self):
-        return path.exists(self.filename)
 
     ## Length of file
     def __len__(self):
@@ -143,6 +149,21 @@ class Logger(object):
     def __exit__(self, exception_type, exception_value, exception_traceback):
         self.file.close()
         del self.file
+
+
+class LoggerGroup:
+    def __init__(self, logger_list: dict[str: Logger]):
+        self.logger_list = logger_list
+
+    def log(self, logger_name, message: str = "*log message wasn't given*", log_type: int = None,
+            split_char: str = ": ",
+            duplicate_to_console: bool = False):
+        self.logger_list[logger_name].log(message=message, log_type=log_type, split_char=split_char,
+                                          duplicate_to_console=duplicate_to_console)
+
+    def console_log(self, logger_name, message: str = "*log message wasn't given*", log_type: int = None,
+                    split_char: str = ": "):
+        self.logger_list[logger_name].console_log(message=message, log_type=log_type, split_char=split_char)
 
 
 if __name__ == "__main__":

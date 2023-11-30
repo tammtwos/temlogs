@@ -1,3 +1,18 @@
+Metadata-Version: 2.1
+Name: temlogs
+Version: 1.2
+Summary: Simple, fast module for logging.
+Home-page: https://github.com/tammtwos/temlogs
+Author: rpelka
+Author-email: tammtwos@gmail.com
+Project-URL: GitHub, https://github.com/tammtwos/temlogs
+Keywords: files log logging fast simple userfriendly
+Classifier: Programming Language :: Python :: 3.11
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+
 # TemLogs 1.1 - Simplest logging lib.
 
 ## Basics of TemLogs.

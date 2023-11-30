@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 
 def readme():
-    with open('README.md', 'r') as f:
+    with open('E:/smthng/temlogs/README.md', 'r') as f:
         return f.read()
 
 
 setup(
     name='temlogs',
-    version='1.1',
+    version='1.2',
     author='rpelka',
     author_email='tammtwos@gmail.com',
     description='Simple, fast module for logging.',

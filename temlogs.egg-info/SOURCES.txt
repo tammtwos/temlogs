@@ -1,0 +1,9 @@
+README.md
+setup.cfg
+setup.py
+temlogs/__init__.py
+temlogs/temlogs.py
+temlogs.egg-info/PKG-INFO
+temlogs.egg-info/SOURCES.txt
+temlogs.egg-info/dependency_links.txt
+temlogs.egg-info/top_level.txt
